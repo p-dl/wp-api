@@ -1,0 +1,17 @@
+<div class="col-md-4 mb-3">
+    <label for="filterMenu">Filter posts by:</label>
+    <select class="form-select" id="filterMenu">
+        <option value="0" selected>All Posts</option>
+    </select>
+</div>
+<div class="input-group mb-3">
+    <input (input)="onSearch($event)" type="text" class="form-control is-valid" id="searchBox"
+        placeholder="Search in posts...">
+    <button class="input-group-text" type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
+    <div class="invalid-feedback">
+        Pattern not found
+    </div>
+    <div class="valid-feedback">
+        {{n}} items found
+    </div>
+</div>

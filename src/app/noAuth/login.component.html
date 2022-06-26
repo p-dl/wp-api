@@ -1,0 +1,17 @@
+<form (submit)="handleLogin()" [formGroup]="loginForm">
+    <fieldset>
+        <legend class="mb-3">Login to participate...</legend>
+        <div class="form-floating mb-3">
+            <input type="text" class="form-control" id="username" formControlName="username" placeholder="Username">
+            <label for="username">* Username</label>
+        </div>
+        <div class="form-floating mb-3">
+            <input autocomplete="current-password" type="password" class="form-control" formControlName="password"
+                id="password" placeholder="Password">
+            <label for="password">* Password</label>
+        </div>
+        <div id="signin-validation"></div>
+        <button class="btn btn-success d-grid col-7 mx-auto" type="submit">Login</button>
+    </fieldset>
+</form>
+<!-- <a routerLink="" class="btn btn-secondary">Go back</a> -->

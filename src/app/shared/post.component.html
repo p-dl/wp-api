@@ -1,0 +1,22 @@
+<div class="row">
+    <div class="col-md-6 col-lg-4 mb-3" *ngFor="let post of posts">
+        <p class="fs-1">{{post.id}}:</p>
+        <div class="card">
+            <img [src]="post.imageLink" class="card-img-top" alt="Picture not available">
+            <div class="card-body">
+                <h5 class="card-title text-center fs-3">{{post.title}}</h5>
+                <p class="card-text" [innerHTML]='posts.length<2?post.content:post.excerpt'>
+                </p>
+                <i class="fa-solid fa-user m-2"></i>{{post.authorName}}<br><i
+                    class="fa-regular fa-calendar-days m-2"></i>
+                {{post.date | date:'short'}}
+                <span *ngIf="posts.length>1" class="">
+                    <a class="btn btn-dark" [routerLink]="[post.id]">See more</a>
+                </span>
+                <a *ngIf="post.authorName==username" class="btn btn-warning ms-1"
+                    [routerLink]="['edit-post',post.id]">Edit this</a>
+            </div>
+        </div>
+        <app-comment *ngIf="!!username"></app-comment>
+    </div>
+</div>
