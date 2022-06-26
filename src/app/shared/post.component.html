@@ -14,7 +14,7 @@
                     <a class="btn btn-dark" [routerLink]="[post.id]">See more</a>
                 </span>
                 <a *ngIf="post.authorName==username" class="btn btn-warning ms-1"
-                    [routerLink]="['edit-post',post.id]">Edit this</a>
+                    [routerLink]="['/edit-post',post.id]">Edit this</a>
             </div>
         </div>
         <app-comment *ngIf="!!username"></app-comment>
