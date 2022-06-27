@@ -39,9 +39,8 @@
             </label>
           </div>
           <button type="submit" class="btn btn-success me-2">{{page}} Post</button>
-          <button class="btn btn-outline-secondary me-2" routerLink="/">Cancel</button>
-          <button *ngIf="isEdit" class="btn btn-danger" (click)="handleDelete()">Delete Post</button>
-
+          <button class="btn btn-outline-secondary me-2" type="button" routerLink="/">Cancel</button>
+          <button *ngIf="isEdit" class="btn btn-danger" type="button" (click)="handleDelete()">Delete Post</button>
         </fieldset>
       </form>
 

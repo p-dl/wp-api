@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { map, Observable } from 'rxjs';
+import { Router } from '@angular/router';
+import { finalize, map, Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Post, TokenInfo } from '../interfaces';
 
@@ -9,11 +10,11 @@ import { Post, TokenInfo } from '../interfaces';
 })
 export class NoAuthRequestsService {
   offset: number = (new Date()).getTimezoneOffset()
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private router: Router) {
   }
   validateUser(formData: FormData): Observable<TokenInfo> {
     const url = environment.apiUrl + '/jwt-auth/v1/token'
-    return this.http.post<TokenInfo>(url, formData)
+    return this.http.post<TokenInfo>(url, formData).pipe(finalize(() => this.router.navigateByUrl('/posts')))
   }
   getPosts(): Observable<Post[]> {
     return this.http.get(`${environment.apiUrl}/wp/v2/posts?_embed&any=${Math.random()}`).pipe(

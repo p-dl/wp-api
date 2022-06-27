@@ -10,22 +10,22 @@ import { NoAuthRequestsService } from '../services/no-auth-requests.service';
 })
 export class LoginComponent implements OnInit {
   loginForm: FormGroup
+  validation: string = ''
   constructor(private noAuthRequests: NoAuthRequestsService,
     private fb: FormBuilder,
-    private router:Router) {
+    private router: Router) {
     this.loginForm = this.fb.group({
       username: '',
       password: ''
     })
   }
   handleLogin() {
-    this.noAuthRequests.validateUser(this.loginForm.value).subscribe({
-      next: (res: TokenInfo) => {
+    this.noAuthRequests.validateUser(this.loginForm.value).subscribe(
+      (res: TokenInfo) => {
         localStorage.setItem('token', res.token)
         localStorage.setItem('username', res.user_display_name)
-        this.router.navigateByUrl('/posts')
       }
-    })
+    )
   }
   ngOnInit(): void {
   }
