@@ -19,7 +19,7 @@ export class NoAuthRequestsService {
     return this.http.get(`${environment.apiUrl}/wp/v2/posts?_embed&any=${Math.random()}`).pipe(
       map((res: any) => {
         let formattedPost = res.map((post: any) => {
-          let d = new Date(new Date(post.date).getTime() - this.offset * 60 * 1000);
+          let d = new Date(new Date(post.date_gmt).getTime() - this.offset * 60 * 1000);
           return {
             id: post.id,
             date: d,
@@ -41,9 +41,10 @@ export class NoAuthRequestsService {
   getPost(param: string): Observable<Post> {
     return this.http.get(`${environment.apiUrl}/wp/v2/posts/${param}?_embed&any=${Math.random()}`).pipe(
       map((res: any) => {
+        let d = new Date(new Date(res.date_gmt).getTime() - this.offset * 60 * 1000);
         return {
           id: res.id,
-          date: res.date,
+          date: d,
           author: res.author,
           authorName: res._embedded ? res._embedded.author[0].name : '',
           title: res.title.rendered,
