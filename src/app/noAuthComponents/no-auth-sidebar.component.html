@@ -1,6 +1,5 @@
-<form (submit)="handleLogin()" [formGroup]="loginForm">
+<form (submit)="onLogin()" [formGroup]="loginForm">
     <fieldset>
-        <legend class="mb-3">Login to participate...</legend>
         <div class="form-floating mb-3">
             <input type="text" class="form-control" id="username" formControlName="username" placeholder="Username">
             <label for="username">* Username</label>
@@ -10,7 +9,9 @@
                 id="password" placeholder="Password">
             <label for="password">* Password</label>
         </div>
-        <button class="btn btn-success d-grid col-7 mx-auto" type="submit">Login</button>
+        <div class="alert alert-danger" *ngIf="!!errorMessage" [innerHTML]="errorMessage"></div>
+        <div class="row">
+            <button class="btn btn-success d-grid col-5" type="submit">Login</button>
+        </div>
     </fieldset>
 </form>
-<a routerLink="/" class="btn btn-secondary">Go back</a>

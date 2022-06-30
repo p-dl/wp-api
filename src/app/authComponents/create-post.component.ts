@@ -1,29 +1,28 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { NoAuthRequestsService } from '../services/no-auth-requests.service';
-import { AuthRequestsService } from '../services/auth-requests.service'
+import { RequestsService } from '../core/requests.service'
+
 @Component({
   selector: 'app-create-post',
   templateUrl: './create-post.component.html',
-  styles: ['img { max-width: 100%; width: 100%; }']
 })
 export class CreatePostComponent implements OnInit {
+  photoValidation: boolean = true
   imageUrl = ''
   createForm!: FormGroup
   photoData = new FormData
   isEdit: boolean = false
   page = "Create"
   id: string | null = ''
-  constructor(private noAuthRequestsService: NoAuthRequestsService,
+  constructor(private requests: RequestsService,
     private route: ActivatedRoute,
     private router: Router,
-    private fb: FormBuilder,
-    private authRequestsService: AuthRequestsService) {
+    private fb: FormBuilder) {
     this.createForm = this.fb.group({
-      title: '',
+      title: ['', Validators.required],
       featured_media: 0,
-      content: '',
+      content: ['', Validators.required],
       status: 'draft',
     })
   }
@@ -35,7 +34,8 @@ export class CreatePostComponent implements OnInit {
 
   onFileChange(ev: any): void {
     this.photoData.append('file', ev.target.files[0])
-    this.authRequestsService.uploadFeaturedMedia(this.photoData)
+    this.photoValidation = ev.target.files[0].type.split('/')[0] === 'image' ? true : false
+    this.requests.uploadFeaturedMedia(this.photoData)
       .subscribe(res => {
         this.imageUrl = res.guid.rendered
         this.createForm.patchValue({ featured_media: res.id })
@@ -44,7 +44,7 @@ export class CreatePostComponent implements OnInit {
   editPage() {
     this.isEdit = true
     this.page = "Edit"
-    this.noAuthRequestsService.getPost(`${this.id}`).subscribe(res => {
+    this.requests.getPost(`${this.id}`).subscribe(res => {
       this.imageUrl = res.imageLink
       this.createForm.patchValue({
         title: res.title,
@@ -55,22 +55,21 @@ export class CreatePostComponent implements OnInit {
     })
   }
   handleUpdate() {
-    this.authRequestsService.updatePost(this.id, this.createForm.value)
+    this.createForm.valid && this.requests.updatePost(this.id, this.createForm.value)
       .subscribe({
         next: res => this.router.navigateByUrl('/posts')
       })
   }
   handleCreate() {
-    console.log("this.createform.value=", this.createForm.value)
-    this.authRequestsService.createPost(this.createForm.value)
+    this.createForm.valid && this.requests.createPost(this.createForm.value)
       .subscribe({
         next: res => this.router.navigateByUrl('/posts')
       })
   }
   handleDelete() {
-    this.authRequestsService.deletePost(this.id)
+    this.requests.deletePost(this.id)
       .subscribe({
-        next: res => this.router.navigateByUrl('/posts')   // handle error for forbidden 403
+        next: res => this.router.navigateByUrl('/posts')
       })
   }
 }

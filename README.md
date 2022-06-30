@@ -1,13 +1,15 @@
 ### Completed Tasks:
 - CRUD Posts
 - Date according to client's location
+- Debounce effect in search
+- Core modules and shared modules separation
+- Added form validators
 
+
+### Working on:
+- Custom validators
 
 ### Remaining Tasks:
-- Add dynamic class constant
-- Add debounce effect in search
+- Handle errors
 - Implement comment section
 - Add ngx-translate i18n attribute and xlf files
-
-#### Demo link:
-#### https://p-dl.github.io/wp-api

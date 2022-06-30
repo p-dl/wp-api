@@ -1,21 +1,35 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { finalize, map, Observable } from 'rxjs';
+import { map, Observable, of } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { Post, TokenInfo } from '../interfaces';
+import { Author, Post, TokenInfo } from '../interfaces';
 
 @Injectable({
   providedIn: 'root'
 })
-export class NoAuthRequestsService {
+export class RequestsService {
+  constructor(private http: HttpClient) { }
   offset: number = (new Date()).getTimezoneOffset()
-  constructor(private http: HttpClient, private router: Router) {
-  }
   validateUser(formData: FormData): Observable<TokenInfo> {
     const url = environment.apiUrl + '/jwt-auth/v1/token'
-    return this.http.post<TokenInfo>(url, formData).pipe(finalize(() => this.router.navigateByUrl('/posts')))
+    return this.http.post<TokenInfo>(url, formData)
   }
+
+  getAuthors(): Observable<Author[]> {
+    return this.http.get(`${environment.apiUrl}/wp/v2/users?any=${Math.random()}`).pipe(
+      map((res: any) => {
+        let formatterUser = res.map((user: any) => {
+          return {
+            id: user.id,
+            name: user.name
+          }
+        })
+        return formatterUser
+      })
+    )
+  }
+
   getPosts(): Observable<Post[]> {
     return this.http.get(`${environment.apiUrl}/wp/v2/posts?_embed&any=${Math.random()}`).pipe(
       map((res: any) => {
@@ -32,7 +46,6 @@ export class NoAuthRequestsService {
             excerpt: post.excerpt.rendered,
             status: post.status,
             viewOnWordpress: post.guid.rendered,
-            isFromSearch: false
           }
         })
         return formattedPost
@@ -54,8 +67,7 @@ export class NoAuthRequestsService {
           imageLink: res._embedded['wp:featuredmedia'] ? res._embedded['wp:featuredmedia'][0].source_url : '',
           excerpt: res.excerpt.rendered,
           status: res.status,
-          viewOnWordpress: res.guid.rendered,
-          isFromSearch: false
+          viewOnWordpress: res.guid.rendered
         }
       })
     )
@@ -79,8 +91,36 @@ export class NoAuthRequestsService {
       }),
     )
   }
+
+  authorWise(query: string = ''): Observable<number[]> {
+    return this.http.get(`${environment.apiUrl}/wp/v2/posts?author=${query}`).pipe(
+      map((res: any) => {
+        let postId: number[] = res.map((post: any) => {
+          return post.id
+        })
+        return postId
+      })
+    )
+  }
+
   getImageUrl(featured_media: number): Observable<string> {
     return this.http.get<any>(`${environment.apiUrl}/wp/v2/media/${featured_media}`)
       .pipe(map(res => res.guid.rendered))
+  }
+  uploadFeaturedMedia(photoData: FormData): Observable<any> {
+    const url = `${environment.apiUrl}/wp/v2/media`
+    return this.http.post(url, photoData)
+  }
+  updatePost(id: string | null, formData: FormData): Observable<any> {
+    const url = `${environment.apiUrl}/wp/v2/posts/${id}`
+    return this.http.post(url, formData)
+  }
+  createPost(formData: FormData): Observable<any> {
+    const url = `${environment.apiUrl}/wp/v2/posts`
+    return this.http.post(url, formData)
+  }
+  deletePost(id: string | null): Observable<any> {
+    const url = `${environment.apiUrl}/wp/v2/posts/${id}`
+    return this.http.delete(url)
   }
 }

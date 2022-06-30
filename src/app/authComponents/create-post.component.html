@@ -1,7 +1,6 @@
 <div class="container-fluid">
   <div class="row">
     <div class="col-md-8 col-lg-6">
-
       <form [formGroup]="createForm" (submit)="isEdit?handleUpdate():handleCreate()">
         <fieldset>
           <legend class="mt-3 mb-3 text-center">
@@ -10,21 +9,51 @@
           <div class="mb-3">
             <div class="input-group">
               <span class="input-group-text bg-secondary text-light">* Title</span>
-              <input class="form-control" type="text" formControlName="title" [value]="this.createForm.value.title" />
+              <input [ngClass]="{
+                  'form-control':true, 
+                  'is-valid':createForm.get('title')?.dirty && createForm.get('title')?.valid,
+                  'is-invalid':createForm.get('title')?.dirty && createForm.get('title')?.invalid
+                }" type="text" formControlName="title" [value]="this.createForm.value.title" />
+              <div class="invalid-feedback">
+                Please provide a title.
+              </div>
+              <div class="valid-feedback">
+                Looks good.
+              </div>
             </div>
           </div>
-
           <div class="mb-3">
             <label for="photo" class="form-label">Picture:</label>
-            <input class="form-control" type="file" id="photo" (change)="onFileChange($event)" />
+            <input [ngClass]="{
+              'form-control':true,
+              'is-valid': createForm.get('featured_media')?.value && photoValidation,
+              'is-invalid':createForm.get('featured_media')?.value && !photoValidation
+             }" type="file" id="photo" (change)="onFileChange($event)" />
+
+            <div class="invalid-feedback">
+              Incorrect image type.
+            </div>
+            <div class="valid-feedback">
+              Looks good.
+            </div>
+
           </div>
           <div class="mb-3">
             <img [src]="imageUrl" alt="Image not found">
           </div>
           <div class="mb-3">
             <label for="post_text">* Content:</label>
-            <textarea class="form-control" id="post_text" formControlName="content" rows="12"
-              [value]="this.createForm.value.content"></textarea>
+            <textarea [ngClass]="{
+                'form-control':true,
+                'is-valid': createForm.get('content')?.dirty && createForm.get('content')?.valid,
+                'is-invalid':createForm.get('content')?.dirty && createForm.get('content')?.invalid
+              }" formControlName="content" rows="12" [value]="this.createForm.value.content"></textarea>
+            <div class="invalid-feedback">
+              Please provide content.
+            </div>
+            <div class="valid-feedback">
+              Looks good.
+            </div>
           </div>
           <div class="form-check">
             <input class="form-check-input" value="draft" type="radio" formControlName="status" id="statusA">
@@ -43,7 +72,6 @@
           <button *ngIf="isEdit" class="btn btn-danger" type="button" (click)="handleDelete()">Delete Post</button>
         </fieldset>
       </form>
-
     </div>
   </div>
 </div>

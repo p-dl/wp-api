@@ -14,5 +14,8 @@ export interface Post {
     authorName: string
     imageLink: string
     viewOnWordpress: string
-    isFromSearch: boolean
+}
+export interface Author {
+    id: number,
+    name: string
 }

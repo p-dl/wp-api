@@ -9,7 +9,7 @@
             </div>
             <div class="col-sm-6 text-center">
                 <app-auth-sidebar *ngIf="!!username" (authEvent)="onAuthStateChange($event)"></app-auth-sidebar>
-                <app-no-auth-sidebar *ngIf="!username"></app-no-auth-sidebar>
+                <app-no-auth-sidebar *ngIf="!username" (authEvent)="onAuthStateChange($event)"></app-no-auth-sidebar>
             </div>
         </div>
         <app-post [posts]="posts" [username]="username">

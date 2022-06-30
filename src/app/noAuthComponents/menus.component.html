@@ -1,0 +1,23 @@
+<div class="col-md-4 mb-3">
+    <label for="filterMenu">Filter posts by:</label>
+    <select (change)="onSelect($event)" class="form-select" id="filterMenu">
+        <option value="" selected>All Posts</option>
+        <ng-container *ngFor="let author of authors">
+            <option [value]="author.id">{{author.name}}</option>
+        </ng-container>
+    </select>
+</div>
+<div class="input-group mb-3">
+    <input debounce (inputChange)="onSearch($event)" type="text" [ngClass]="{
+            'form-control':true, 
+            'is-valid':isValid,
+            'is-invalid':!isValid
+        }" id="searchBox" placeholder="Search in posts...">
+    <button class="input-group-text" type="button"><i class="fa-solid fa-magnifying-glass"></i></button>
+    <div class="invalid-feedback">
+        No posts found
+    </div>
+    <div class="valid-feedback">
+        {{n}} items found
+    </div>
+</div>
