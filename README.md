@@ -13,3 +13,6 @@
 - Handle errors
 - Implement comment section
 - Add ngx-translate i18n attribute and xlf files
+
+### Demo link:
+https://p-dl.github.io/wp-api
